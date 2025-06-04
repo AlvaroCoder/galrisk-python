@@ -1,0 +1,13 @@
+/venv
+.env
+/__pycache__
+
+./__pycache__
+
+./config/__pycache__
+
+./routes/__pycache__
+__pycache__
+
+**/__pycache__
+__pycache__/*.pyc
