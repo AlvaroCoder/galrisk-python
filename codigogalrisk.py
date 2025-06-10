@@ -61,7 +61,7 @@ print(tabulate(top_impactos, headers="keys", floatfmt=".6f", tablefmt="fancy_gri
 
 print("="*100)
 print("Generando tablas de simulación para los impactos top...")
-tablas_simuladas, distribuciones_simuladas = generar_tablas_aleatorias_top(top_impactos, 10000)
+tablas_simuladas, distribuciones_simuladas = generar_tablas_aleatorias_top(top_impactos, 100000)
 print("Tablas de simulación generadas con éxito.")
 
 wb = xw.Book(ruta_excel)
