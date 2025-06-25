@@ -61,29 +61,14 @@ print(tabulate(top_impactos, headers="keys", floatfmt=".6f", tablefmt="fancy_gri
 
 print("="*100)
 print("Generando tablas de simulación para los impactos top...")
-tablas_simuladas, distribuciones_simuladas = generar_tablas_aleatorias_top(top_impactos, 100000)
+
+numero_simulaciones = 10001
+tablas_simuladas, distribuciones_simuladas = generar_tablas_aleatorias_top(top_impactos, numero_simulaciones)
+
 print("Tablas de simulación generadas con éxito.")
 
 wb = xw.Book(ruta_excel)
 
-"""
-for tabla in list(tablas_simuladas.keys())[:2]:
-    hoja, celda_ref = tabla.split("!")
-    resultados_vector = []
-    print(f"Tabla: {tabla}"+"="*10)
-    for valor in tablas_simuladas[tabla][:100].values:
-        valor_inicial = wb.sheets[hoja].range(celda_ref).value
-        wb.sheets[hoja].range(celda_ref).value = valor[0]
-        resultado = wb.sheets[hoja_nombre].range(celda_objetivo).value
-        resultados_vector.append({
-            tabla: valor[0],
-            f"resultado objetivo {celda_ref}": resultado,
-        })
-        wb.sheets[hoja].range(celda_ref).value = valor_inicial
-    print(tabulate(resultados_vector, headers="keys", floatfmt=".6f", tablefmt="fancy_grid"))
-
-wb.close()  # Cerrar el libro de Excel
-"""
 import numpy as np
 
 union_valores = [tablas_simuladas[tabla].values for tabla in tablas_simuladas.keys()]
@@ -114,33 +99,19 @@ for indice,letra in enumerate(letras_encabezado):
 
 hoja_simulacion.range("A2").value = matriz_simulada
 
+# Falta terminar codigo
 
+for i, fila in enumerate(matriz_simulada[:1000]):
+    for (hoja, celda), valor in zip(celda_refs, fila):
+        wb.sheets[hoja].range(celda).value = valor
 
-print("Resultados de la simulación de 100 iteraciones:")
-print(tabulate(lista_resultados, headers="keys", floatfmt=".6f", tablefmt="fancy_grid"))
-
-
-"""
-for indice, fila in enumerate(matriz_simulada):
-    if indice >= 1000:
-        break
-    for indice_columna in range(len(fila)):
-        llave = llaves_tablas[indice_columna]
-        hoja, celda_ref = llave.split("!")
-        wb.sheets[hoja].range(celda_ref).value = fila[indice_columna]
-        
     resultado = wb.sheets[hoja_nombre].range(celda_objetivo).value
-    lista_resultados.append({
 
-        llaves_tablas[0].split("!")[1] : fila[0],
-        llaves_tablas[1].split("!")[1] : fila[1],
-        llaves_tablas[2].split("!")[1] : fila[2],
-        llaves_tablas[3].split("!")[1] : fila[3],
-        llaves_tablas[4].split("!")[1] : fila[4],
-        llaves_tablas[5].split("!")[1] : fila[5],
-        "resultado" : resultado,
-    })
-"""
+    print(resultado)
+
+# print("Resultados de la simulación de 100 iteraciones:")
+# print(tabulate(lista_resultados, headers="keys", floatfmt=".6f", tablefmt="fancy_grid"))
+
 
 """
 for i, fila in enumerate(matriz_simulada[:1000]):  # Limitamos directamente aquí
