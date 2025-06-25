@@ -3,6 +3,7 @@ from code_app.obtener_precedentes import obtener_precedentes_completos
 from code_app.filtrar_raices import filtrar_valores_raiz
 from tabulate import tabulate  # pip install tabulate
 from code_app.generar_tablas_distribucion import generar_tablas_aleatorias_top
+from code_app.filtrar_impactos import filtrar_mayores_impactos
 
 ruta_excel = "/Users/alvarofelipepupuchemorales/Desktop/Proyecto Economia/assets/PALTA HASS  BCP.xlsx"
 hoja_nombre = "Costos Agricolas 01 ha"
@@ -54,7 +55,6 @@ wb.close()
 print("="*100)
 print("IMPACTOS TOP")
 # Filtrar por los mayores impactos
-from code_app.filtrar_impactos import filtrar_mayores_impactos
 
 top_impactos = filtrar_mayores_impactos(resultados, top_n=6)
 print(tabulate(top_impactos, headers="keys", floatfmt=".6f", tablefmt="fancy_grid"))
