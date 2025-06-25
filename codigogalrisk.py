@@ -62,7 +62,7 @@ print(tabulate(top_impactos, headers="keys", floatfmt=".6f", tablefmt="fancy_gri
 print("="*100)
 print("Generando tablas de simulación para los impactos top...")
 
-numero_simulaciones = 10001
+numero_simulaciones = 100
 tablas_simuladas, distribuciones_simuladas = generar_tablas_aleatorias_top(top_impactos, numero_simulaciones)
 
 print("Tablas de simulación generadas con éxito.")
@@ -77,56 +77,20 @@ matriz_simulada = np.hstack(union_valores)
 
 llaves_tablas = list(tablas_simuladas.keys())
 celda_refs = [llave.split("!") for llave in llaves_tablas]  # lista de [hoja, celda]
-celda_columnas = [celda for _, celda in celda_refs]
 
-lista_resultados = []
+lista_resultados_van = []
 
-nombre_hoja_simulacion = "Simulación de Impactos"
-if nombre_hoja_simulacion in [s.name for s in wb.sheets]:
-    wb.sheets[nombre_hoja_simulacion].delete()
-
-
-wb.sheets.add(nombre_hoja_simulacion)  # Agregar una nueva hoja para los resultados
-# Escribir encabezados en la hoja de simulación
-
-letras_encabezado = []
-hoja_simulacion = wb.sheets[nombre_hoja_simulacion]
-for letra in range(len(llaves_tablas)):
-    letras_encabezado.append(f"{chr(65 + letra)}{1}")  # A, B, C, D, E, F, ...
-
-for indice,letra in enumerate(letras_encabezado):
-    hoja_simulacion.range(letra).value = celda_columnas[indice]  
-
-hoja_simulacion.range("A2").value = matriz_simulada
-
-# Falta terminar codigo
-
-for i, fila in enumerate(matriz_simulada[:1000]):
+for i, fila in enumerate(matriz_simulada):
+    cabeceras = {}
     for (hoja, celda), valor in zip(celda_refs, fila):
         wb.sheets[hoja].range(celda).value = valor
+        cabeceras[celda] = valor
 
     resultado = wb.sheets[hoja_nombre].range(celda_objetivo).value
+    cabeceras["VAN"] = resultado
+    lista_resultados_van.append(cabeceras)
 
-    print(resultado)
+wb.close()
 
-# print("Resultados de la simulación de 100 iteraciones:")
-# print(tabulate(lista_resultados, headers="keys", floatfmt=".6f", tablefmt="fancy_grid"))
-
-
-"""
-for i, fila in enumerate(matriz_simulada[:1000]):  # Limitamos directamente aquí
-    # Escribir valores en las 6 celdas correspondientes
-    for (hoja, celda), valor in zip(celda_refs, fila):
-        wb.sheets[hoja].range(celda).value = valor
-
-    # Obtener resultado de la celda objetivo
-    resultado = wb.sheets[hoja_nombre].range(celda_objetivo).value
-
-    # Armar diccionario de fila de resultados
-    resultado_dict = {col: val for col, val in zip(celda_columnas, fila)}
-    resultado_dict["resultado"] = resultado
-    lista_resultados.append(resultado_dict)
-
-
-wb.close()  # Cerrar el libro de Excel
-"""
+print(f"Resultados de la simulación de {numero_simulaciones} iteraciones:")
+print(tabulate(lista_resultados_van, headers="keys", floatfmt=".6f", tablefmt="fancy_grid"))
